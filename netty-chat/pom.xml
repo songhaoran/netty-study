@@ -9,7 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>netty-nio</artifactId>
+    <artifactId>netty-chat</artifactId>
+
 
     <dependencies>
         <dependency>
@@ -29,9 +30,5 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.61</version>
         </dependency>
-
-
-
     </dependencies>
-
 </project>

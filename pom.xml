@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>netty-nio</module>
+        <module>netty-chat</module>
     </modules>
 
 
