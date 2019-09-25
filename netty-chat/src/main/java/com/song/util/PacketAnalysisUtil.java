@@ -11,7 +11,7 @@ import java.util.Map;
  * Created by Song on 2019/09/22.
  */
 public class PacketAnalysisUtil {
-    private static final int MAGIC_NUMBER = 0x12345678;
+    public static final int MAGIC_NUMBER = 0x12345678;
     private static final Map<Integer, Class<? extends Packet>> packetTypeMap;
 
     static {
@@ -19,17 +19,17 @@ public class PacketAnalysisUtil {
         packetTypeMap.put(PacketType.login_request.getType(), LoginRequestPacket.class);
         packetTypeMap.put(PacketType.login_response.getType(), LoginResponsePacket.class);
         packetTypeMap.put(PacketType.msg_request.getType(), MsgRequestPacket.class);
-        packetTypeMap.put(PacketType.msg_response.getType(), MsgResponsePacket.class);
     }
 
     public static byte[] encode(Packet packet) {
         // 2. 序列化 java 对象
-        byte[] bytes = JSON.toJSONBytes(packet);
-        return bytes;
+        return JSON.toJSONBytes(packet);
     }
 
 
     public static Packet decode(ByteBuf byteBuf) {
+        byteBuf.skipBytes(4);
+
         // 指令
         int packetType = byteBuf.readInt();
 

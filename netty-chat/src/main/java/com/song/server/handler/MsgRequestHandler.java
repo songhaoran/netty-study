@@ -1,10 +1,10 @@
 package com.song.server.handler;
 
-import com.song.util.PacketType;
+import com.song.util.SessionUtil;
 import com.song.vo.MsgRequestPacket;
+import com.song.vo.MsgResponsePacket;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelOutboundHandlerAdapter;
-import io.netty.channel.ChannelPromise;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 /**
@@ -14,11 +14,19 @@ public class MsgRequestHandler extends SimpleChannelInboundHandler<MsgRequestPac
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MsgRequestPacket msg) throws Exception {
-        // 发消息
-        MsgRequestPacket msgRequestPacket = new MsgRequestPacket();
-        msgRequestPacket.setPacketType(PacketType.msg_request);
-        msgRequestPacket.setMsg("你好,我是服务端");
 
-        ctx.channel().write(msgRequestPacket);
+        // 找到要发送的channel
+        Integer toUserId = msg.getToUserId();
+        Channel channel = SessionUtil.getChannel(toUserId);
+
+        if (channel == null) {
+            System.out.println("找不到要发送的渠道");
+            return;
+        }
+
+        // 写消息
+        MsgResponsePacket responsePacket = new MsgResponsePacket();
+        responsePacket.setMsg(msg.getMsg());
+        channel.writeAndFlush(responsePacket);
     }
 }

@@ -1,14 +1,21 @@
 package com.song.client;
 
 import com.song.client.handler.LoginResponseHandler;
-import com.song.client.handler.MsgResponseHandler;
+import com.song.handler.MsgResponseHandler;
 import com.song.handler.PacketDecodeHandler;
 import com.song.handler.PacketEncodeHandler;
+import com.song.server.handler.MsgRequestHandler;
+import com.song.util.LoginUtil;
+import com.song.vo.LoginRequestPacket;
+import com.song.vo.MsgRequestPacket;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+
+import java.io.Console;
+import java.util.Scanner;
 
 /**
  * Created by Song on 2019/09/23.
@@ -31,7 +38,6 @@ public class NettyChatClient {
                     }
                 });
         conect(bootstrap, "127.0.0.1", 8000, 0);
-
     }
 
     static int maxRetryTimes = 5;
@@ -51,5 +57,25 @@ public class NettyChatClient {
                 }
             }
         });
+    }
+
+    public static void startConsoleThread(Channel channel) {
+        new Thread(() -> {
+            Scanner scanner = new Scanner(System.in);
+
+            while (Thread.interrupted() == false) {
+                if (LoginUtil.isLogin(channel)) {
+                    System.out.println("请输入用户名:");
+                    LoginRequestPacket packet = new LoginRequestPacket();
+                    packet.setUsername(scanner.nextLine());
+                    packet.setPassword("pwd");
+                    channel.writeAndFlush(packet);
+                } else {
+                    MsgRequestPacket packet = new MsgRequestPacket();
+                    packet.setMsg(scanner.nextLine());
+                    channel.writeAndFlush(packet);
+                }
+            }
+        }).start();
     }
 }

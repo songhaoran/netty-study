@@ -26,7 +26,6 @@ public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginRespo
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginResponsePacket msg) throws Exception {
         // 登录结果
-        System.out.println("******************");
-        System.out.println("登录结果:" + JSON.toJSONString(msg));
+        System.out.println("接收到登录结果:" + JSON.toJSONString(msg));
     }
 }

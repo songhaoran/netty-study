@@ -1,5 +1,6 @@
 package com.song.vo;
 
+import com.song.util.PacketType;
 import lombok.Data;
 
 /**
@@ -7,5 +8,13 @@ import lombok.Data;
  */
 @Data
 public class MsgRequestPacket extends Packet {
+
+    private Integer toUserId;
+
     private String msg;
+
+    @Override
+    public void setPacketType(PacketType packetType) {
+        super.setPacketType(PacketType.msg_request);
+    }
 }

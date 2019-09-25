@@ -10,5 +10,5 @@ public class LoginResponsePacket extends Packet {
 
     private Boolean isSuccess;
 
-    private String reson;
+    private String reason;
 }

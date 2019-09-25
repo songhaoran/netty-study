@@ -1,5 +1,6 @@
 package com.song.vo;
 
+import com.song.util.PacketType;
 import lombok.Data;
 
 /**
@@ -12,4 +13,9 @@ public class LoginRequestPacket extends Packet {
     private String username;
 
     private String password;
+
+    @Override
+    public void setPacketType(PacketType packetType) {
+        super.setPacketType(PacketType.login_request);
+    }
 }

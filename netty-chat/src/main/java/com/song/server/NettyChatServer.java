@@ -2,6 +2,7 @@ package com.song.server;
 
 import com.song.handler.PacketDecodeHandler;
 import com.song.handler.PacketEncodeHandler;
+import com.song.server.handler.AuthHandler;
 import com.song.server.handler.LoginRequestHandler;
 import com.song.server.handler.MsgRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -17,15 +18,15 @@ public class NettyChatServer {
 
     public static void main(String[] args) {
         NioEventLoopGroup bossGroup = new NioEventLoopGroup();
-        NioEventLoopGroup worderGroup = new NioEventLoopGroup();
+        NioEventLoopGroup workerGroup = new NioEventLoopGroup();
 
         ServerBootstrap serverBootstrap = new ServerBootstrap();
-
-        serverBootstrap.group(bossGroup, worderGroup)
+        serverBootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) throws Exception {
+                        ch.pipeline().addLast(new AuthHandler());
                         ch.pipeline().addLast(new PacketDecodeHandler());
                         ch.pipeline().addLast(new LoginRequestHandler());
                         ch.pipeline().addLast(new MsgRequestHandler());

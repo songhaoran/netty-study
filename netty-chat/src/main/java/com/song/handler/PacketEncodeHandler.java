@@ -13,6 +13,7 @@ public class PacketEncodeHandler extends MessageToByteEncoder<Packet> {
     @Override
     protected void encode(ChannelHandlerContext ctx, Packet msg, ByteBuf out) throws Exception {
         byte[] bytes = PacketAnalysisUtil.encode(msg);
+        out.writeInt(PacketAnalysisUtil.MAGIC_NUMBER);
         out.writeInt(msg.getPacketType().getType());
         out.writeInt(bytes.length);
         out.writeBytes(bytes);
