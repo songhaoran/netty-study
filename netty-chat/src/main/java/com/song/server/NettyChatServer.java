@@ -2,6 +2,7 @@ package com.song.server;
 
 import com.song.handler.PacketDecodeHandler;
 import com.song.handler.PacketEncodeHandler;
+import com.song.handler.Spliter;
 import com.song.server.handler.AuthHandler;
 import com.song.server.handler.LoginRequestHandler;
 import com.song.server.handler.MsgRequestHandler;
@@ -26,9 +27,10 @@ public class NettyChatServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(new AuthHandler());
+                        ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(new PacketDecodeHandler());
                         ch.pipeline().addLast(new LoginRequestHandler());
+                        ch.pipeline().addLast(new AuthHandler());
                         ch.pipeline().addLast(new MsgRequestHandler());
                         ch.pipeline().addLast(new PacketEncodeHandler());
                     }

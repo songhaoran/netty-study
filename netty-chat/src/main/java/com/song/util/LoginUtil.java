@@ -9,10 +9,9 @@ import io.netty.util.AttributeKey;
  */
 public class LoginUtil {
 
-    public static final AttributeKey loginAttrKey = AttributeKey.newInstance("attr_login_status");
 
     public static boolean isLogin(Channel channel) {
-        Attribute attr = channel.attr(loginAttrKey);
+        Attribute attr = channel.attr(AttrKey.sessionKey);
         return attr.get() != null;
     }
 }

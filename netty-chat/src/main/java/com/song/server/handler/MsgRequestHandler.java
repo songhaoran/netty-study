@@ -1,5 +1,6 @@
 package com.song.server.handler;
 
+import com.song.util.PacketType;
 import com.song.util.SessionUtil;
 import com.song.vo.MsgRequestPacket;
 import com.song.vo.MsgResponsePacket;
@@ -26,6 +27,7 @@ public class MsgRequestHandler extends SimpleChannelInboundHandler<MsgRequestPac
 
         // 写消息
         MsgResponsePacket responsePacket = new MsgResponsePacket();
+        responsePacket.setPacketType(PacketType.msg_response);
         responsePacket.setMsg(msg.getMsg());
         channel.writeAndFlush(responsePacket);
     }

@@ -4,17 +4,18 @@ import com.song.client.handler.LoginResponseHandler;
 import com.song.handler.MsgResponseHandler;
 import com.song.handler.PacketDecodeHandler;
 import com.song.handler.PacketEncodeHandler;
-import com.song.server.handler.MsgRequestHandler;
+import com.song.handler.Spliter;
 import com.song.util.LoginUtil;
+import com.song.util.PacketType;
 import com.song.vo.LoginRequestPacket;
 import com.song.vo.MsgRequestPacket;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
-import java.io.Console;
 import java.util.Scanner;
 
 /**
@@ -31,6 +32,7 @@ public class NettyChatClient {
                 .handler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) throws Exception {
+                        ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(new PacketDecodeHandler());
                         ch.pipeline().addLast(new LoginResponseHandler());
                         ch.pipeline().addLast(new MsgResponseHandler());
@@ -46,6 +48,7 @@ public class NettyChatClient {
         bootstrap.connect(ip, port).addListener(future -> {
             if (future.isSuccess()) {
                 System.out.println("客户端链接成功!");
+                startConsoleThread(((ChannelFuture) future).channel());
             } else {
                 if (retry <= maxRetryTimes) {
                     System.out.println("客户端链接失败!");
@@ -72,7 +75,9 @@ public class NettyChatClient {
                     channel.writeAndFlush(packet);
                 } else {
                     MsgRequestPacket packet = new MsgRequestPacket();
-                    packet.setMsg(scanner.nextLine());
+                    packet.setToUserId(Integer.parseInt(scanner.next()));
+                    packet.setMsg(scanner.next());
+                    packet.setPacketType(PacketType.msg_request);
                     channel.writeAndFlush(packet);
                 }
             }

@@ -19,6 +19,7 @@ public class PacketAnalysisUtil {
         packetTypeMap.put(PacketType.login_request.getType(), LoginRequestPacket.class);
         packetTypeMap.put(PacketType.login_response.getType(), LoginResponsePacket.class);
         packetTypeMap.put(PacketType.msg_request.getType(), MsgRequestPacket.class);
+        packetTypeMap.put(PacketType.msg_response.getType(), MsgResponsePacket.class);
     }
 
     public static byte[] encode(Packet packet) {
